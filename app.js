@@ -1,5 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
+const express_graphql = require('express-graphql');
+let { buildSchema } = require('graphql');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -20,13 +22,30 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(bodyParser.jason());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
 app.use('/users', usersRouter);
+
+// GraphQL schema
+let schema = buildSchema(`
+  type Query {
+    message: String
+  }
+`);
+
+let root = {
+  message: () => 'Hello World!'
+};
+
+app.use(`/graphql`, express_graphql({
+  schema: schema,
+  rootValue: root,
+  graphiql: true
+}));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
