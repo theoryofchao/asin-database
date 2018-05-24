@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const express_graphql = require('express-graphql');
-let { buildSchema } = require('graphql');
+
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -31,14 +31,10 @@ app.use('/api', apiRouter);
 app.use('/users', usersRouter);
 
 // GraphQL schema
-let schema = buildSchema(`
-  type Query {
-    message: String
-  }
-`);
+let schema = require('./graphql/schema');
 
 let root = {
-  message: () => 'Hello World!'
+  message: () => 'Hello World!!'
 };
 
 app.use(`/graphql`, express_graphql({
