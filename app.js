@@ -33,9 +33,7 @@ app.use('/users', usersRouter);
 // GraphQL schema
 let schema = require('./graphql/schema');
 
-let root = {
-  message: () => 'Hello World!!'
-};
+let root = require('./graphql/root');
 
 app.use(`/graphql`, express_graphql({
   schema: schema,
