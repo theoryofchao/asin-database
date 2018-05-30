@@ -4,9 +4,14 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 const {OperationHelper} = require('apac');
 
+const config = require('../config.json');
+
+
 /* GET home page. */
 router.post('/asin', function(req, res, next) {
   // console.log(req.body.asin);
+
+  console.log(config);
 
   const options = {
     uri: `http://www.amazon.com/dp/${req.body.asin}`,
