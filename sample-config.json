@@ -1,5 +1,5 @@
 {
-  "awsID": "[YOUR AWS ID HERE]",
+  "awsId": "[YOUR AWS ID HERE]",
   "awsSecret": "[YOUR AWS SECRET HERE]",
   "assocId": "[YOUR ASSOCIATE TAG HERE]"
 }
