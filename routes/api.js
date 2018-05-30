@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const rp = require('request-promise');
 const cheerio = require('cheerio');
+const {OperationHelper} = require('apac');
 
 /* GET home page. */
 router.post('/asin', function(req, res, next) {
@@ -17,9 +18,9 @@ router.post('/asin', function(req, res, next) {
   rp(options)
   .then((data) => {
     // console.log(data.html());
-    data('span.inlineBlock-display span.a-color-price').each((i, element) => {
-      console.log(element);
-    })
+    // data('span.inlineBlock-display span.a-color-price').each((i, element) => {
+    //   console.log(element);
+    // })
     return res.send(data.html());
   })
 
