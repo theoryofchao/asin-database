@@ -6,6 +6,11 @@ const {OperationHelper} = require('apac');
 
 const config = require('../config.json');
 
+const opHelper = new OperationHelper({
+    awsId:     config.awsId,
+    awsSecret: config.awsSecret,
+    assocId:   config.assocId
+});
 
 /* GET home page. */
 router.post('/asin', function(req, res, next) {
