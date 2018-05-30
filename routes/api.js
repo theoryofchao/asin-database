@@ -17,6 +17,9 @@ router.post('/asin', function(req, res, next) {
   rp(options)
   .then((data) => {
     // console.log(data.html());
+    data('span.inlineBlock-display span.a-color-price').each((i, element) => {
+      console.log(element);
+    })
     return res.send(data.html());
   })
 
