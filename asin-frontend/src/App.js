@@ -12,10 +12,15 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: 'test'
+      url: ''
     };
+
+    this.updateSearchUrl = this.updateSearchUrl.bind(this);
   }
 
+  updateSearchUrl(value) {
+    this.setState({url: value});
+  }
 
   render() {
     return (
@@ -24,7 +29,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to Jungle Scout ASIN Crawler</h1>
         </header>
-        <SearchBar />
+        <SearchBar updateSearchUrl={this.updateSearchUrl}/>
         <Product url={this.state.url}/>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.

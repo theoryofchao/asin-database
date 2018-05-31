@@ -28,7 +28,8 @@ class SearchBar extends Component {
   }
 
   handleSubmit(event) {
-    alert(this.state.value);
+    // alert(this.state.value);
+    this.props.updateSearchUrl(this.state.value);
     event.preventDefault();
   }
 
