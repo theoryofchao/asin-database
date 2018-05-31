@@ -22,10 +22,17 @@ router.post('/asin', function(req, res, next) {
   rp(options)
   .then(($) => {
 
-    let categories = $('#wayfinding-breadcrumbs_feature_div ul').text();
-    categories = cleanArray(categories.split(/[\r\n]+/));
+    // category as array
+    let productCategory = $('#wayfinding-breadcrumbs_feature_div ul').text();
+    productCategory = cleanArray(productCategory.split(/[\r\n]+/), (toClean) => {
+      if(toClean.length <= 1 || toClean === '›') {
+        return null;
+      } else {
+        return toClean;
+      }
+    });
 
-    console.log(categories);
+    // console.log(productCategory);
 
     let detailBullet = $('#detail-bullets .bucket .content ul').text();
     detailBullet = cleanArray(detailBullet.split(/[\r\n]+/));
@@ -33,11 +40,33 @@ router.post('/asin', function(req, res, next) {
 
     let productDimensions = findParameters(detailBullet, "product dimensions");
 
-    // console.log(productDimensions);
+    console.log(productDimensions);
 
-    let salesRank = $('#SalesRank').html(); //TODO: take salesRank and separate into rank and category?
+    console.log("---------------------");
 
-    return res.send(detailBullet);
+    let productTitle = $('#productTitle').text().trim()
+    console.log(productTitle);
+
+    console.log("---------------------");
+
+    let productImage = $('#imgTagWrapperId').html()
+
+    console.log(productImage);
+
+
+
+    let salesRank = $('#SalesRank').text(); //TODO: take salesRank and separate into rank and category?
+
+    res.setHeader('Content-Type', 'application/json');
+    res.json({
+      "productTitle": productTitle,
+      "productImage": productImage,
+      "productCategory": JSON.stringify(productCategory),
+      "productDimensions": productDimensions,
+      "salesRank": salesRank
+
+    });
+    return;
   })
   .catch((err) => {
     console.log("error request failed");
@@ -47,11 +76,16 @@ router.post('/asin', function(req, res, next) {
   // res.render('index', { title: 'Express' });
 });
 
-function cleanArray(actual) {
+function cleanArray(actual, customClean) {
   var newArray = [];
+
   actual.forEach((element) => {
-    if(element.trim()) {
-      newArray.push(element.trim());
+    let cleaned = element.trim();
+    cleaned = customClean ? customClean(cleaned) : cleaned;
+
+    if(cleaned) {
+      
+      newArray.push(cleaned);
     }
   });
   return newArray;
