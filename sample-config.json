@@ -1,5 +1,3 @@
 {
-  "awsId": "[YOUR AWS ID HERE]",
-  "awsSecret": "[YOUR AWS SECRET HERE]",
-  "assocId": "[YOUR ASSOCIATE TAG HERE]"
+  "proxyCrawlerToken": "[YOUR PROXY CRAWLER TOKEN HERE]"
 }
