@@ -1,0 +1,27 @@
+version: '2'
+services:
+  web:
+    build: .
+    command: npm start
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+      - .:/usr/app/asin-frontend/
+      - /usr/appa/sin-frontend/node_modules
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://asinapp@postgres/asin
+  postgres:
+    image: postgres:9.6.2-alpine
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: asinuser
+      POSTGRES_PASSWORD: asinuser
+      POSTGRES_DB: asin
