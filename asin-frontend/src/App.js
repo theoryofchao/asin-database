@@ -4,6 +4,8 @@ import './App.css';
 import SearchBar from './SearchBar.js';
 import Product from './Product.js';
 
+const rp = require('request-promise');
+
 class App extends Component {
 
   // this.state = {
@@ -12,15 +14,40 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: ''
+      url: '',
+      name: '',
+      image: '',
+      category: '',
+      dimension: ''
     };
 
     this.updateSearchUrl = this.updateSearchUrl.bind(this);
   }
 
   updateSearchUrl(value) {
+    let options = {
+      method: 'POST',
+      uri: `http://localhost:3000/api/asin`,
+      form: {
+        asin_url: value
+      }
+    }
+
     this.setState({url: value});
-  }
+
+    rp(options)
+    .then((parsedBody) => {
+      parsedBody = JSON.parse(parsedBody);
+      console.log(parsedBody.productTitle);
+      this.setState({
+        name: parsedBody.productTitle
+
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+   }
 
   render() {
     return (
@@ -31,6 +58,7 @@ class App extends Component {
         </header>
         <SearchBar updateSearchUrl={this.updateSearchUrl}/>
         <Product url={this.state.url}/>
+        {this.state.name}
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
