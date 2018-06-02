@@ -4,11 +4,18 @@
   padding: 20px;
 }
 
+.ProductBody-Intro {
+  background-color: #222;
+  height: 68vh;
+  padding: 20px;
+  color: white;
+  font-size: 20px;
+}
+
 .ProductBody-Name {
   color: white;
   font-size: 30px;
   height: 5%;
-  /*border: 2px solid white;*/
 }
 
 .ProductBody-Category {
@@ -19,7 +26,6 @@
   margin: 1%;
   height: 5%;
   width: 48%;
-  /*border: 2px solid white;*/
   box-sizing: border-box;
 }
 
@@ -31,19 +37,15 @@
   margin: 1%;
   height: 5%;
   width: 48%;
-  /*border: 2px solid white;*/
   box-sizing: border-box;
 }
 
 .ProductBody-Image {
-  /*background-color: #FF9000;*/
   margin: 1%;
   color: white;
   font-size: 20px;
   margin: 1%;
   height: 50%;
-  /*border: 2px solid white;*/
-  /*box-sizing: border-box;*/
 }
 
 .ProductBody-Rank {
@@ -51,7 +53,6 @@
   font-size: 20px;
   margin: 1%;
   height: 3%;
-  /*border: 2px solid white;*/
   box-sizing: border-box;
 }
 
@@ -65,26 +66,3 @@
   color: #FF9000;
   font-size: 25px;
 }
-/*
-.SearchBar-Input {
-  float: left;
-  height: 100%;
-  font-size: 20px;
-  width: 80%;
-  border: none;
-  padding: 0px;
-  padding-left: 10px;
-  box-sizing: border-box;
-}
-
-.SearchBar-Submit {
-  background-color: #004E8C;
-  float: left;
-  height: 100%;
-  width: 20%;
-  border: none;
-  display: block;
-  font-size: 20px;
-  color: #FF9000;
-  font-weight: 700;
-}*/

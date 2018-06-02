@@ -16,7 +16,8 @@ class App extends Component {
       rank: '',
       image: '',
       dimensions: '',
-      url: ''
+      url: '',
+      searching: ''
     };
 
     this.updateSearchUrl = this.updateSearchUrl.bind(this);
@@ -31,13 +32,17 @@ class App extends Component {
       }
     }
 
-    this.setState({url: value});
+    this.setState({
+      url: value,
+      searching: 'true'
+    });
 
     rp(options)
     .then((parsedBody) => {
       parsedBody = JSON.parse(parsedBody);
       console.log(parsedBody.productTitle);
       this.setState({
+        searching: 'false',
         name: parsedBody.productTitle,
         image: parsedBody.productImage,
         rank: parsedBody.salesRank,
@@ -46,18 +51,15 @@ class App extends Component {
       });
     })
     .catch((err) => {
+      this.setState({
+        searching: 'error'
+      })
       console.log(err);
     });
    }
-
-   // {this.state.name}
-   //      {this.state.image}!!
-   //      {this.state.rank}!!
-   //      {this.state.category}!!
-   //      {this.state.dimensions}!!
-
   render() {
     let productDetails = {
+      searching: this.state.searching,
       name: this.state.name,
       category: this.state.category,
       rank: this.state.rank,

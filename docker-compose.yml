@@ -11,10 +11,10 @@ services:
     ports:
       - "3000:3000"
       - "3001:3001"
-    depends_on:
+    links:
       - postgres
     environment:
-      DATABASE_URL: postgres://asinapp@postgres/asin
+      DATABASE_URL: postgres://asiniser:asinuser@postgres:5432/asin
   postgres:
     image: postgres:9.6.2-alpine
     volumes:

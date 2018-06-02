@@ -3,18 +3,6 @@ import './SearchBar.css';
 
 class SearchBar extends Component {
 
-  // onUserNameChange = e => {
-  //   if (e.key === 'Enter') {
-  //     this.props.changeUserName(e.target.value);
-  //   }
-  // }
-
-  // onMessageEnter = e => {
-  //   if (e.key === 'Enter') {
-  //     this.props.newMessage(e.target.value);
-  //     e.target.value = '';
-  //   }
-  // }
   constructor(props) {
     super(props);
     this.state = {value: ''};
@@ -37,7 +25,7 @@ class SearchBar extends Component {
   render() {
     return (
       <form className="SearchBar"  onSubmit={this.handleSubmit}>
-        <input className="SearchBar-Input" type="text" value={this.state.value} onChange={this.handleChange}/>
+        <input className="SearchBar-Input" type="text" value={this.state.value} onChange={this.handleChange} placeholder="Enter a product URL and get information on the product!"/>
         <input className="SearchBar-Submit" type="submit" value="Submit" />
       </form>
     );
