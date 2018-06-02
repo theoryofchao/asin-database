@@ -11,12 +11,12 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: '',
       name: '',
-      image: '',
-      rank: '',
       category: '',
-      dimensions: ''
+      rank: '',
+      image: '',
+      dimensions: '',
+      url: ''
     };
 
     this.updateSearchUrl = this.updateSearchUrl.bind(this);
@@ -50,7 +50,22 @@ class App extends Component {
     });
    }
 
+   // {this.state.name}
+   //      {this.state.image}!!
+   //      {this.state.rank}!!
+   //      {this.state.category}!!
+   //      {this.state.dimensions}!!
+
   render() {
+    let productDetails = {
+      name: this.state.name,
+      category: this.state.category,
+      rank: this.state.rank,
+      image: this.state.image,
+      dimensions: this.state.dimensions,
+      url: this.state.dimensions
+    }
+
     return (
       <div className="App">
         <header className="App-header">
@@ -58,16 +73,10 @@ class App extends Component {
           <h1 className="App-title">Welcome to Jungle Scout's ASIN Crawler</h1>
         </header>
         <SearchBar updateSearchUrl={this.updateSearchUrl}/>
-        <Product url={this.state.url}/>
-        {this.state.name}!!
-        {this.state.image}!!
-        {this.state.rank}!!
-        {this.state.category}!!
-        {this.state.dimensions}!!
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Product product_details={productDetails} url={this.state.url}/>
+        <div className="App-footer">Made with love by TheoryOfChao &lt;3</div>
       </div>
+
     );
   }
 }

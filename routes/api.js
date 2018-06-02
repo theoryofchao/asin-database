@@ -70,7 +70,7 @@ router.post('/asin', function(req, res, next) {
         let productDimensions = pageText.find((element) => {
           return element.match(/.+\sx.+\sx.+/g);
         });
-        productDimensions = productDimensions.trim().split("imensions").pop().split("ize").pop();
+        productDimensions = productDimensions ? productDimensions.trim().split("imensions").pop().split("ize").pop() : "Product dimensions not found";
 
         // //image
         // let productImage = $('#imgTagWrapperId').html();

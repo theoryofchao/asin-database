@@ -1,0 +1,28 @@
+.SearchBar {
+  background-color: #FF9000;
+  height: 4vh;
+  padding: 10px;
+}
+
+.SearchBar-Input {
+  float: left;
+  height: 100%;
+  font-size: 20px;
+  width: 80%;
+  border: none;
+  padding: 0px;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+.SearchBar-Submit {
+  background-color: #004E8C;
+  float: left;
+  height: 100%;
+  width: 20%;
+  border: none;
+  display: block;
+  font-size: 20px;
+  color: #FF9000;
+  font-weight: 700;
+}

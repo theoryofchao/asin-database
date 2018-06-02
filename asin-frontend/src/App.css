@@ -9,20 +9,25 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 15vh;
   padding: 20px;
+  box-sizing: border-box;
   color: white;
 }
 
 .App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
+  font-size: 1.8em;
 }
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.App-footer {
+  color: white;
+  font-weight: 600;
+  padding: 20px;
+  height: 4.9vh;
+  background-color: #FF9000;
 }
