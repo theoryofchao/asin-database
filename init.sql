@@ -1,8 +1,9 @@
-create table asin(
-  id int primary key NOT NULL,
-  name text NOT NULL,
-  url text NOT NULL UNIQUE,
-  rank text NOT NULL,
-  dimensions text NOT NULL,
-  image text
+CREATE TABLE IF NOT EXISTS ASIN(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  url TEXT NOT NULL UNIQUE,
+  rank TEXT NOT NULL,
+  dimensions TEXT NOT NULL,
+  image TEXT
 );

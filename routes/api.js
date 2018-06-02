@@ -2,75 +2,185 @@ var express = require('express');
 var router = express.Router();
 const rp = require('request-promise');
 const cheerio = require('cheerio');
+const pgp = require('pg-promise')({});  //no init options
+const cn = `postgres://asinuser:asinuser@localhost:5432/asin`;  //separate out database username and password to config file
+const db = pgp(cn);
 
 /* GET home page. */
 router.post('/asin', function(req, res, next) {
   let asin_url = req.body.asin_url;
 
-  //check if already loaded into database?
+  const token = 'HQfTDQ5Cun8TSUrsxgLevg'; //move to it's own function
+  let encoded_asin_url = encodeURIComponent(asin_url);
 
-  const token = 'HQfTDQ5Cun8TSUrsxgLevg';
+  // Check DB for URL
+  db.any('SELECT * FROM asin WHERE url = $1', [asin_url])
+  .then((data) => {
+    // If URL does not exist in DB
+    if(data.length === 0) {
 
-  let options = {
-    method: 'GET',
-    uri: `https://api.proxycrawl.com/?token=${token}&url=${encodeURIComponent(asin_url)}`,
-    transform: (body) => {
-      return cheerio.load(body);  //When promise resolves, transforms function by loading into cheerio (for parsing)
-    }
-  }
-
-  rp(options)
-  .then(($) => {
-
-    // category as array
-    let productCategory = $('#wayfinding-breadcrumbs_feature_div ul').text();
-    productCategory = cleanArray(productCategory.split(/[\r\n]+/), (toClean) => {
-      if(toClean.length <= 1 || toClean === '›') {
-        return null;
-      } else {
-        return toClean;
+      let options = {
+        method: 'GET',
+        uri: `https://api.proxycrawl.com/?token=${token}&url=${encoded_asin_url}`,
+        transform: (body) => {
+          return cheerio.load(body);  //When promise resolves, transforms function by loading into cheerio (for parsing)
+        }
       }
-    });
 
-    // console.log(productCategory);
+      return rp(options)
+      .then($ => {
+        let pageText = $.text().split(/[\r\n]+/);
 
-    let detailBullet = $('#detail-bullets .bucket .content ul').text();
-    detailBullet = cleanArray(detailBullet.split(/[\r\n]+/));
-    // console.log(detailBullet);
+        //name (works)
+        let productTitle = $('#productTitle').text().trim();
 
-    let productDimensions = findParameters(detailBullet, "product dimensions");
+        //category (as array) (works)
+        let productCategory = $('#wayfinding-breadcrumbs_feature_div ul').text();
+        productCategory = cleanArray(productCategory.split(/[\r\n]+/), (toClean) => {
+          if(toClean.length <= 1 || toClean === '›') {
+            return null;
+          } else {
+            return toClean;
+          }
+        });
 
-    console.log(productDimensions);
+        //rank
+        let salesRank = $('#SalesRank').text().split(/[\r\n]+/);
+        salesRank = cleanArray(salesRank, (toClean) => {
+          if(toClean.includes(`Sellers Rank`)) {
+            return null;
+          } else if (toClean.toLowerCase().includes(`(see top`)){
+            return toClean.split("(See top")[0].split("(See Top")[0].trim();
+          } else {
+            return toClean;
+          }
+        });
+        let temp = []
 
-    console.log("---------------------");
+        salesRank.forEach((element, index, array) => {
+          if(element.includes(`#`) && element.includes(`in`)) {
+            temp.push(element);
+          } else if(element.includes(`#`) && array[index+1]) {
+              temp.push(`${element} ${array[index+1]}`)
+          }
+        });
+        salesRank = temp.slice();
 
-    let productTitle = $('#productTitle').text().trim()
-    console.log(productTitle);
+        //dimensions
+        let productDimensions = pageText.find((element) => {
+          return element.match(/.+\sx.+\sx.+/g);
+        });
+        productDimensions = productDimensions.trim().split("imensions").pop().split("ize").pop();
 
-    console.log("---------------------");
+        // //image
+        // let productImage = $('#imgTagWrapperId').html();
+        // productImage = productImage.match(/data-old-hires=".+jpg\" onload"/g)[0].replace("data-old-hires\"","").replace("\" onload", "");
+        // console.log(productImage);
 
-    let productImage = $('#imgTagWrapperId').html()
+        let productUrl = asin_url;
 
-    console.log(productImage);
-
-
-
-    let salesRank = $('#SalesRank').text(); //TODO: take salesRank and separate into rank and category?
-
+        return db.one(`INSERT INTO asin(name, category, rank, dimensions, image, url) VALUES ($1, $2, $3, $4, $5, $6) returning id`, [productTitle, productCategory.toString(), salesRank.join("|||"), productDimensions, 'imagetest', asin_url])
+        .then(data => {
+          return {
+            id: data.id,
+            name: productTitle,
+            category: productCategory.toString(),
+            rank: salesRank.join("|||"),
+            dimensions: productDimensions,
+            image: 'imagetest',
+            url: productUrl
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      });
+    // If URL exists in DB
+    } else {
+      console.log(data[0])
+      return data[0];
+    }
+  })
+  .then(parsedResults => {
     res.setHeader('Content-Type', 'application/json');
     res.json({
-      "productTitle": productTitle,
-      "productImage": productImage,
-      "productCategory": JSON.stringify(productCategory),
-      "productDimensions": productDimensions,
-      "salesRank": salesRank
+      "productTitle": parsedResults.name,
+      "productImage": parsedResults.image,
+      "productCategory": parsedResults.category,
+      "productDimensions": parsedResults.dimensions,
+      "salesRank": parsedResults.rank
 
     });
-    return;
   })
-  .catch((err) => {
-    console.log("error request failed");
+  .catch(error => {
+    console.log(error)
+    return;
   });
+
+
+
+ 
+
+  
+
+  // rp(options)
+  // .then(($) => {
+
+  //   // category as array
+  //   let productCategory = $('#wayfinding-breadcrumbs_feature_div ul').text();
+  //   productCategory = cleanArray(productCategory.split(/[\r\n]+/), (toClean) => {
+  //     if(toClean.length <= 1 || toClean === '›') {
+  //       return null;
+  //     } else {
+  //       return toClean;
+  //     }
+  //   });
+
+  //   // console.log(productCategory);
+
+  //   let detailBullet = $('#detail-bullets .bucket .content ul').text();
+  //   detailBullet = cleanArray(detailBullet.split(/[\r\n]+/));
+  //   // console.log(detailBullet);
+
+  //   let productDimensions = findParameters(detailBullet, "product dimensions");
+
+  //   // console.log(productDimensions);
+
+  //   // console.log("---------------------");
+
+  //   let productTitle = $('#productTitle').text().trim()
+  //   // console.log(productTitle);
+
+  //   // console.log("---------------------");
+
+  //   let productImage = $('#imgTagWrapperId').html()
+
+  //   // console.log(productImage);
+
+  //   db.one(`INSERT INTO asin(name, url, rank, dimensions, image) VALUES ($1, $2, $3, $4, $5) returning id`, [productTitle, asin_url, 'test', 'test', 'test'])
+  //     .then(data => {
+  //       console.log(data.id);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+
+  //   let salesRank = $('#SalesRank').text(); //TODO: take salesRank and separate into rank and category?
+
+  //   res.setHeader('Content-Type', 'application/json');
+  //   res.json({
+  //     "productTitle": productTitle,
+  //     "productImage": productImage,
+  //     "productCategory": JSON.stringify(productCategory),
+  //     "productDimensions": productDimensions,
+  //     "salesRank": salesRank
+
+  //   });
+  //   return;
+  // })
+  // .catch((err) => {
+  //   console.log("error request failed");
+  // });
 
   // return res.send(req.body);
   // res.render('index', { title: 'Express' });
