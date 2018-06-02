@@ -50,21 +50,29 @@ class Product extends Component {
       rankings.push(<div className="ProductBody-Rank">{value}</div>);
     })
 
-
-
-    return (
-      <div className="ProductBody">
-        <div className="ProductBody-Name">{this.props.product_details.name}</div>
-        <div className="ProductBody-Category">{this.displayCategory(this.props.product_details.category)}</div>
-        <div className="ProductBody-Dimensions">{this.props.product_details.dimensions}</div>
-        <img className="ProductBody-Image" src={this.displayImage(this.props.url)}/>
-        {rankings}
-        <div className="ProductBody-UrlBox">
-          <a className="ProductBody-Url" href={this.props.url} >{this.props.url}</a>
+    if(this.props.product_details.name) {
+      return (
+        <div className="ProductBody">
+          <div className="ProductBody-Name">{this.props.product_details.name}</div>
+          <div className="ProductBody-Category">{this.displayCategory(this.props.product_details.category)}</div>
+          <div className="ProductBody-Dimensions">{this.props.product_details.dimensions}</div>
+          <img className="ProductBody-Image" src={this.displayImage(this.props.url)}/>
+          {rankings}
+          <div className="ProductBody-UrlBox">
+            <a className="ProductBody-Url" href={this.props.url} >{this.props.url}</a>
+          </div>
+          <div></div>
         </div>
-        <div></div>
-      </div>
-    );
+      );  
+    } else {
+      return (
+        <div className="ProductBody">
+          JungleScout Random Fact
+        </div>
+      );
+    }
+
+    
   }
 
 }
