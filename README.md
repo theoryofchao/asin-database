@@ -5,7 +5,7 @@ This crawler crawls through a given URL and extracts information regarding the p
 
 ## Images
 
-
+!["asin sample"](https://raw.githubusercontent.com/theoryofchao/asin-database/master/docs/sample.png)
 
 ## Getting Started
 - Install dependencies for the project by running `npm install` in the root project folder as well as `npm install` in the `/asin-frontend` folder well.
