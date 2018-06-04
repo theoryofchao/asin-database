@@ -7,3 +7,6 @@ CREATE TABLE IF NOT EXISTS ASIN(
   dimensions TEXT NOT NULL,
   image TEXT
 );
+
+CREATE USER asinuser WITH PASSWORD 'asinuser';
+GRANT ALL PRIVILEGES ON DATABASE asin TO asinuser;
